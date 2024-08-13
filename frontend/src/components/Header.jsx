@@ -19,13 +19,15 @@ function Header() {
     try {
       const response = await axios.get(
         `${URL}/users/current-user`,
-        {},
+
         {
           withCredentials: true,
         }
       );
       if (response.data.user) {
         dispatch(login(response.data.user));
+      } else {
+        dispatch(logout());
       }
     } catch (error) {
       console.log(error);
