@@ -24,7 +24,9 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${URL}/users/register`, formData);
+      const response = await axios.post(`${URL}/users/register`, formData, {
+        withCredentials: true,
+      });
       console.log("User registered successfully:", response.data);
       // Handle successful registration (e.g., redirect or show a success message)
       setFormData(initialFormData);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { GiSpellBook } from "react-icons/gi";
 import { BsBagHeart } from "react-icons/bs";
@@ -9,12 +10,37 @@ import { useNavigate } from "react-router-dom";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 function Header() {
+  const login = useSelector((state) => state.status);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const checkUser = async () => {
+    try {
+      const response = await axios.get(
+        `${URL}/users/current-user`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.data.user) {
+        dispatch(login(response.data.user));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user === null) {
+      checkUser();
+    }
+  }, [dispatch, user]);
+
   const handleLogout = async () => {
     try {
-      await axios.post(`${URL}/users/logout`, { withCredentials: true });
+      await axios.post(`${URL}/users/logout`, {}, { withCredentials: true });
       dispatch(logout());
       navigate("/books");
     } catch (error) {
@@ -30,7 +56,7 @@ function Header() {
         </Link>
       </div>
       <div className="flex gap-2">
-        {user ? (
+        {login ? (
           <>
             {" "}
             <h1>Hello {user.fullName}</h1>
