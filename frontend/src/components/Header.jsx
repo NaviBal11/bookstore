@@ -4,39 +4,35 @@ import { Link } from "react-router-dom";
 import { GiSpellBook } from "react-icons/gi";
 import { BsBagHeart } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/authSlice";
+import { login, logout } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 function Header() {
-  const login = useSelector((state) => state.status);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const checkUser = async () => {
+  const checkUserSession = async () => {
     try {
-      const response = await axios.get(
-        `${URL}/users/current-user`,
-
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.data.user) {
-        dispatch(login(response.data.user));
+      const response = await axios.get(`${URL}/users/current-user`, {
+        withCredentials: true,
+      });
+      if (response.data.data) {
+        dispatch(login(response.data.data)); // Update Redux state with user data
       } else {
-        dispatch(logout());
+        dispatch(logout()); // Ensure state is cleared if user is not logged in
       }
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch user session:", error);
+      dispatch(logout());
     }
   };
 
   useEffect(() => {
-    if (user === null) {
-      checkUser();
+    if (!user) {
+      checkUserSession(); // Restore user session on component mount
     }
   }, [dispatch, user]);
 
@@ -58,7 +54,7 @@ function Header() {
         </Link>
       </div>
       <div className="flex gap-2">
-        {login ? (
+        {user ? (
           <>
             {" "}
             <h1>Hello {user.fullName}</h1>
