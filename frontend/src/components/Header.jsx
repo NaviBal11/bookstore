@@ -65,6 +65,12 @@ function Header() {
               All Books
             </Link>
             <button onClick={handleLogout}>Logout</button>
+            <Link
+              to="/addtobag"
+              className="icon-link transform hover:scale-110 transition-transform duration-300"
+            >
+              <BsBagHeart size={20} style={{ paddingTop: "5px" }} />
+            </Link>
           </>
         ) : (
           <>
