@@ -1,10 +1,8 @@
 import { ApiError } from "../utils/ApiError.js";
+import { stripe_secret_key } from "../config.js";
 import Stripe from "stripe";
-const stripe_secret_key = process.env.STRIPE_SECRET_KEY;
 
-const stripe = new Stripe(
-  "sk_test_51PwlZ1EUg70PmwBChZg1yjziO6GzQH9tUqqaJHVMI8uCUOi7qcLe7CS17c9EY5xrWRF2doQ3tYMuO5F6hCN4ZSdt00C29VOWk1"
-);
+const stripe = new Stripe(stripe_secret_key);
 const payment = async (req, res) => {
   const { items, email } = req.body;
   console.log(items);
