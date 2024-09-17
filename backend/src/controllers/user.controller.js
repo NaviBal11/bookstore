@@ -83,7 +83,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // req body -> data
   const { email, username, password } = req.body;
-  console.log(email);
 
   // check if we didn't get username or email
   if (!username && !email) {
@@ -239,9 +238,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 //Update fullname and email
 const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { fullName, email } = req.body;
+  const { fullName, email, username } = req.body;
 
-  if (!fullName || !email) {
+  if (!fullName && !email && !username) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -251,6 +250,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
       $set: {
         fullName,
         email,
+        username,
       },
     },
     { new: true }

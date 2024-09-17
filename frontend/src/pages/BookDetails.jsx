@@ -10,6 +10,7 @@ function BookDetails() {
   const { bookId } = useParams();
   const [book, setBook] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,35 +35,47 @@ function BookDetails() {
     };
 
     dispatch(addToCart(cartItem));
-    // You can handle adding the book to the cart here
+    setShowAlert(true); // Show the alert when item is added to cart
+
+    // Hide the alert after 3 seconds
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 2000);
   };
 
   return (
-    <div className="container mx-auto p-4 w-80 h-1/2">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="flex justify-around m-5">
+      {showAlert && (
+        <div className="absolute top-12 right-5 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+          Item added to cart!
+        </div>
+      )}
+      <div className="bg-blue-50 shadow-md ml-7 p-4 flex justify-center items-center w-80 h-full ">
         <img
-          className="w-full h-96 object-cover"
+          className="max-w-72 max-h-96 object-contain"
           src={book.cover_image}
           alt={book.title}
         />
-        <div className="p-4">
-          <h3 className="text-2xl font-semibold">{book.title}</h3>
-          <p>{book.description}</p>
-          <div className="mt-4 flex items-center space-x-4">
-            <input
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              className="w-16 p-2 border rounded-md text-center"
-              min="1"
-            />
-            <button
-              className="bg-slate-500 text-white py-2 px-4 rounded-md"
-              onClick={handleAddToBag}
-            >
-              Add to Bag
-            </button>
-          </div>
+      </div>
+      <div className="p-4">
+        <h3 className="text-4xl font-bold mt-6">{book.title}</h3>
+        <p className="text-lg mt-2 font-semibold">{book.author}</p>
+        <p>{book.description}</p>
+        <p className="text-lg">${book.price}</p>
+        <div className="mt-4 flex items-center space-x-4">
+          <input
+            type="number"
+            value={quantity}
+            onChange={handleQuantityChange}
+            className="w-16 p-2 border rounded-md text-center"
+            min="1"
+          />
+          <button
+            className="bg-neutral-800 text-white py-2 px-4 rounded-md w-56"
+            onClick={handleAddToBag}
+          >
+            Add to Bag
+          </button>
         </div>
       </div>
     </div>

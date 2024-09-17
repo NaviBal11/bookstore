@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 function Header() {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -31,10 +31,8 @@ function Header() {
   };
 
   useEffect(() => {
-    if (!user) {
-      checkUserSession(); // Restore user session on component mount
-    }
-  }, [dispatch, user]);
+    checkUserSession(); // Restore user session on component mount
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -50,14 +48,15 @@ function Header() {
       <div className="" title="Go to Home">
         <Link to="/" className="flex items-center space-x-2 space-y-2">
           <GiSpellBook className=" text-lime-600" size={30} />
-          <span className="font-semibold">BOOKS</span>
+          <span className="font-semibold">BOOKHAVEN</span>
         </Link>
       </div>
       <div className="flex gap-2">
         {user ? (
           <>
-            {" "}
-            <h1>Hello {user.fullName}</h1>
+            <Link to="/accountdetails">
+              <h1>Hello {user.fullName}</h1>
+            </Link>
             <Link
               to="/books"
               className="icon-link transform hover:scale-110 transition-transform duration-300"
@@ -66,7 +65,7 @@ function Header() {
             </Link>
             <button onClick={handleLogout}>Logout</button>
             <Link
-              to="/addtobag"
+              to="/cart"
               className="icon-link transform hover:scale-110 transition-transform duration-300"
             >
               <BsBagHeart size={20} style={{ paddingTop: "5px" }} />
@@ -97,7 +96,7 @@ function Header() {
             <span className="text-gray-400">|</span>
 
             <Link
-              to="/addtobag"
+              to="/cart"
               className="icon-link transform hover:scale-110 transition-transform duration-300"
             >
               <BsBagHeart size={20} style={{ paddingTop: "5px" }} />

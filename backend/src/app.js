@@ -18,7 +18,10 @@ app.use(cookieParser());
 //router import
 import bookRouter from "./routes/book.routes.js";
 import userRouter from "./routes/user.routes.js";
+import stripeRouter from "./routes/stripe.routes.js";
+
 //router declaration
 app.use("/api/bookstore", bookRouter);
 app.use("/api/users", userRouter);
+app.use("/api/payment", stripeRouter);
 export { app };

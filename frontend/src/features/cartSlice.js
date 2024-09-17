@@ -22,9 +22,28 @@ export const cartSlice = createSlice({
         Cookies.set("cart", JSON.stringify(state), { expires: 7 });
       }
     },
+    deleteCartItem: (state, action) => {
+      const itemId = action.payload;
+
+      const updatedState = state.filter((item) => item.book._id !== itemId);
+      Cookies.set("cart", JSON.stringify(updatedState), { expires: 7 });
+      return updatedState;
+    },
+
+    updateCartQuantity: (state, action) => {
+      const { itemId, quantity } = action.payload;
+
+      const itemIndex = state.findIndex((item) => item.book._id === itemId);
+      if (itemIndex >= 0) {
+        state[itemIndex].quantity = quantity;
+        // Update the cookie with the updated state
+        Cookies.set("cart", JSON.stringify(state), { expires: 7 });
+      }
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, deleteCartItem, updateCartQuantity } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;

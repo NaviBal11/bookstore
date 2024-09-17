@@ -29,6 +29,13 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    phone: { type: String },
+    address: { type: String },
+    province: { type: String },
+    country: { type: String },
+    city: { type: String },
+    postalcode: { type: String },
+
     refreshToken: {
       type: String,
     },

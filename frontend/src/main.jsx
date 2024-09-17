@@ -12,10 +12,13 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import AllBooks from "./pages/AllBooks";
 import BookDetails from "./pages/BookDetails";
-import AddtoBag from "./pages/AddtoBag";
+import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
+import Checkout from "./pages/Checkout.jsx";
+import Payment from "./pages/Payment.jsx";
+import Success from "./pages/Success.jsx";
+import AccountDetails from "./pages/AccountDetails.jsx";
 import "./index.css";
 
 const router = createBrowserRouter(
@@ -26,7 +29,11 @@ const router = createBrowserRouter(
       <Route path="/:bookId" element={<BookDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/addtobag" element={<AddtoBag />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/payment" element={<Payment />} />
+      <Route path="/success" element={<Success />} />
+      <Route path="/accountdetails" element={<AccountDetails />} />
     </Route>
   )
 );
