@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { GiSpellBook } from "react-icons/gi";
 import { BsBagHeart } from "react-icons/bs";
+
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -31,8 +32,10 @@ function Header() {
   };
 
   useEffect(() => {
-    checkUserSession(); // Restore user session on component mount
-  }, [dispatch]);
+    if (!user) {
+      checkUserSession();
+    } // Restore user session on component mount
+  }, [dispatch, user]);
 
   const handleLogout = async () => {
     try {
@@ -43,63 +46,73 @@ function Header() {
       console.log(error);
     }
   };
+
+  const handleUserAccount = () => {
+    if (user) {
+      navigate("/accountdetails");
+    }
+  };
+
   return (
-    <header className="bg-gray-200 flex justify-between px-7 py-2 font-sans text-base tracking-tight antialiased">
-      <div className="" title="Go to Home">
-        <Link to="/" className="flex items-center space-x-2 space-y-2">
-          <GiSpellBook className=" text-lime-600" size={30} />
-          <span className="font-semibold">BOOKHAVEN</span>
+    <header className="bg-gray-200 flex justify-between items-center px-7 py-4 font-sans text-base tracking-tight antialiased shadow-md">
+      <div className="flex items-center space-x-2" title="Go to Home">
+        <Link to="/" className="flex items-center space-x-2">
+          <GiSpellBook className="text-lime-600" size={30} />
+          <span className="font-semibold text-xl">BOOKHAVEN</span>
         </Link>
       </div>
-      <div className="flex gap-2">
+      <div className="flex items-center space-x-2">
+        <Link
+          to="/books"
+          className="icon-link transform hover:scale-110 transition-transform duration-300 text-gray-700"
+        >
+          All Books
+        </Link>
+        <span className="text-gray-400">|</span>
         {user ? (
           <>
-            <Link to="/accountdetails">
-              <h1>Hello {user.fullName}</h1>
-            </Link>
-            <Link
-              to="/books"
-              className="icon-link transform hover:scale-110 transition-transform duration-300"
+            <button
+              onClick={handleUserAccount}
+              className="transform hover:scale-110 transition-transform duration-300 text-gray-700"
             >
-              All Books
-            </Link>
-            <button onClick={handleLogout}>Logout</button>
+              Hello, {user.firstName}
+            </button>
+            <span className="text-gray-400">|</span>
+            <button
+              onClick={handleLogout}
+              className="transform hover:scale-110 transition-transform duration-300 text-gray-700"
+            >
+              Logout
+            </button>
+            <span className="text-gray-400">|</span>
             <Link
               to="/cart"
               className="icon-link transform hover:scale-110 transition-transform duration-300"
             >
-              <BsBagHeart size={20} style={{ paddingTop: "5px" }} />
+              <BsBagHeart size={20} />
             </Link>
           </>
         ) : (
           <>
             <Link
-              to="/books"
-              className="icon-link transform hover:scale-110 transition-transform duration-300"
-            >
-              All Books
-            </Link>
-            <span className="text-gray-400">|</span>
-            <Link
               to="/register"
-              className="icon-link transform hover:scale-110 transition-transform duration-300"
+              className="icon-link transform hover:scale-110 transition-transform duration-300 text-gray-700"
             >
               Register
             </Link>
             <span className="text-gray-400">|</span>
             <Link
               to="/login"
-              className="icon-link transform hover:scale-110 transition-transform duration-300"
+              className="icon-link transform hover:scale-110 transition-transform duration-300 text-gray-700"
             >
               LogIn
             </Link>
             <span className="text-gray-400">|</span>
-
             <Link
               to="/cart"
               className="icon-link transform hover:scale-110 transition-transform duration-300"
             >
-              <BsBagHeart size={20} style={{ paddingTop: "5px" }} />
+              <BsBagHeart size={20} />
             </Link>
           </>
         )}

@@ -11,7 +11,11 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.status = true;
-      state.user = action.payload;
+      const user = action.payload;
+      const name = user.fullName.split(" ")[0];
+      const firstName =
+        name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      state.user = { ...user, firstName };
     },
     logout: (state) => {
       state.status = false;

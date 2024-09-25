@@ -8,8 +8,9 @@ function Checkout() {
 
   const checkoutPayment = async () => {
     try {
-      const response = await axios.post(`${URL}/payment`, { items: cart });
-
+      const response = await axios.post(`${URL}/payment`, {
+        items: cart,
+      });
       if (response.data.url) {
         window.location.assign(response.data.url); // Forwarding user to Stripe
       }

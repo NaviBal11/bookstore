@@ -75,23 +75,23 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   // req body -> data
-  // check if we didn't get username or email
+  // check if we didn't get email
   //find the user
   //password check
   //access and referesh token
   //send cookie
 
   // req body -> data
-  const { email, username, password } = req.body;
+  const { email, password } = req.body;
 
-  // check if we didn't get username or email
-  if (!username && !email) {
-    throw new ApiError(400, "username or email is required");
+  // check if we didn't get email
+  if (!email) {
+    throw new ApiError(400, "email is required");
   }
 
   //find the user
   const user = await User.findOne({
-    $or: [{ username }, { email }],
+    email,
   });
 
   if (!user) {
@@ -238,9 +238,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 //Update fullname and email
 const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { fullName, email, username } = req.body;
+  const { fullName, username } = req.body;
 
-  if (!fullName && !email && !username) {
+  if (!fullName && !username) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -249,7 +249,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     {
       $set: {
         fullName,
-        email,
         username,
       },
     },

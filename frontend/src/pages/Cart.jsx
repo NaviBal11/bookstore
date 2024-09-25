@@ -28,8 +28,8 @@ function AddtoBag() {
         const response = await axios.post(`${URL}/payment`, {
           items: cart,
           email: user.email,
+          userId: user._id,
         });
-
         if (response.data.url) {
           window.location.assign(response.data.url); // Redirect to Stripe payment
         }

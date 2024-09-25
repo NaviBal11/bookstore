@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import * as Yup from "yup";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,6 +12,26 @@ function Register() {
     password: "",
   };
   const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
+
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full Name is Required"),
+
+    email: Yup.string()
+      .required("Email is Required")
+      .email("Invalid email format"),
+    username: Yup.string().required("Username is Required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one symbol"
+      )
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter"),
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,15 +45,21 @@ function Register() {
     e.preventDefault();
 
     try {
+      await validationSchema.validate(formData, { abortEarly: false });
+      setErrors({});
+
       const response = await axios.post(`${URL}/users/register`, formData, {
         withCredentials: true,
       });
-      console.log("User registered successfully:", response.data);
-      // Handle successful registration (e.g., redirect or show a success message)
       setFormData(initialFormData);
     } catch (error) {
-      console.error("Error registering user:", error);
-      // Handle error (e.g., show an error message)
+      const newErrors = {};
+
+      error.inner.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+
+      setErrors(newErrors);
     }
   };
 
@@ -56,8 +83,8 @@ function Register() {
               value={formData.fullName}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
             />
+            {errors.fullName && <div className="error">{errors.fullName}</div>}
           </div>
 
           <div>
@@ -71,8 +98,8 @@ function Register() {
               value={formData.email}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
             />
+            {errors.email && <div className="error">{errors.email}</div>}
           </div>
 
           <div>
@@ -86,8 +113,8 @@ function Register() {
               value={formData.username}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
             />
+            {errors.username && <div className="error">{errors.username}</div>}
           </div>
 
           <div>
@@ -101,8 +128,8 @@ function Register() {
               value={formData.password}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
             />
+            {errors.password && <div className="error">{errors.password}</div>}
           </div>
 
           <button

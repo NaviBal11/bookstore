@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 main{
-    background-color: antiquewhite;
+    background-color: rgb(240, 239, 236);
     
 }
+
+.error {
+    color: red;
+  }

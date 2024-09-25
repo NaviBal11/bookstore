@@ -1,11 +1,13 @@
 import { ApiError } from "../utils/ApiError.js";
 import { stripe_secret_key } from "../config.js";
+import { Order } from "../models/order.model.js";
+import { User } from "../models/user.model.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(stripe_secret_key);
 const payment = async (req, res) => {
-  const { items, email } = req.body;
-  console.log(items);
+  const { items, email, userId } = req.body;
+
   try {
     const taxRate = await stripe.taxRates.create({
       display_name: "Sales Tax",
@@ -32,6 +34,28 @@ const payment = async (req, res) => {
       mode: "payment",
       success_url: "http://localhost:5173/success", // Replace with your success URL
       cancel_url: "http://localhost:5173/cart", // Replace with your cancel URL
+    });
+
+    // Calculate total amount
+    const totalAmount =
+      items.reduce((acc, item) => acc + item.book.price * item.quantity, 0) *
+      1.1; // 10% tax included
+
+    // Save order details to MongoDB
+    const order = new Order({
+      userId,
+      items: items.map((item) => ({
+        bookId: item.book._id, // Ensure bookId is provided
+        quantity: item.quantity,
+      })),
+      totalAmount: Math.round(totalAmount * 100) / 100, // Ensure to save amount in the correct format
+      status: "pending",
+    });
+    await order.save();
+
+    // Update user's orderHistory
+    await User.findByIdAndUpdate(userId, {
+      $push: { orderHistory: order._id },
     });
 
     res.json({ url: session.url });
