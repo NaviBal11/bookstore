@@ -65,7 +65,7 @@ function Footer() {
             </div>
           </div>
           <div className="w-full lg:w-1/4">
-            <h3 className="text-xl font-semibold mb-2">Feedback to Owner</h3>
+            <h3 className="text-xl font-semibold mb-2">Get in Touch</h3>
             <ContactForm />
           </div>
         </div>
