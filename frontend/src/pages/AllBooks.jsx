@@ -11,7 +11,7 @@ function AllBooks() {
 
   useEffect(() => {
     axios
-      .get(`${URL}/api/bookstore/books`)
+      .get(`${URL}/bookstore/books`)
       .then((response) => {
         const data = response.data.data;
 

@@ -3,12 +3,16 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-const allowedOrigins = ["https://bookstorefrontend-neon.vercel.app"]; // Add your frontend URL here
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://your-frontend-url.vercel.app",
+];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true, // Include this if you're dealing with cookies
+    credentials: true,
   })
 );
 
