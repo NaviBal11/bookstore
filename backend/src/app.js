@@ -3,14 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-const allowedOrigins = ["https://bookstorefrontend-gilt.vercel.app"]; // Add your frontend URL here
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true, // Include this if you're dealing with cookies
-  })
-);
+app.use(cors());
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
