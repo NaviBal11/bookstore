@@ -4,7 +4,10 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-const allowedOrigins = ["https://bookstore-frontend-snowy.vercel.app"];
+const allowedOrigins = [
+  "https://bookstore-frontend-snowy.vercel.app",
+  "http://localhost:5173",
+];
 
 app.use(
   cors({
