@@ -6,7 +6,7 @@ const URL = import.meta.env.VITE_BACKEND_URL;
 function Checkout() {
   const cart = useSelector((state) => state.cart);
 
-  const checkoutPayment = async () => {
+  const checkoutPaymentasGuest = async () => {
     try {
       const response = await axios.post(`${URL}/payment`, {
         items: cart,
@@ -43,7 +43,7 @@ function Checkout() {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-              onClick={checkoutPayment}
+              onClick={checkoutPaymentasGuest}
             >
               Continue as Guest
             </button>
