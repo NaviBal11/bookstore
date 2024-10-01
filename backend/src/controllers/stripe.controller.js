@@ -32,8 +32,8 @@ const payment = async (req, res) => {
         tax_rates: [taxRate.id],
       })),
       mode: "payment",
-      success_url: "http://localhost:5173/success", // Replace with your success URL
-      cancel_url: "http://localhost:5173/cart", // Replace with your cancel URL
+      success_url: "https://bookstore-frontend-snowy.vercel.app/success", // Replace with your success URL
+      cancel_url: "https://bookstore-frontend-snowy.vercel.app/cart", // Replace with your cancel URL
     });
 
     // Calculate total amount
