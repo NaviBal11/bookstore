@@ -7,12 +7,7 @@ import Stripe from "stripe";
 const stripe = new Stripe(stripe_secret_key);
 const payment = async (req, res) => {
   const { items, email, userId } = req.body;
-  if (userId === null) {
-    userId = "ergre";
-  }
-  if (email === null) {
-    email = "abc@gmail.com";
-  }
+
   try {
     const taxRate = await stripe.taxRates.create({
       display_name: "Sales Tax",
