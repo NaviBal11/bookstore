@@ -6,7 +6,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://bookstore-frontend-57tw.onrender.com",
     credentials: true,
   })
 );
