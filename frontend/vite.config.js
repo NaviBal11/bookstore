@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://bookstore-backend-mkbd.onrender.com",
+        target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
@@ -14,4 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  build: {
+    outDir: "dist",
+  },
 });
