@@ -6,7 +6,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://spiffy-bonbon-cfabc9.netlify.app",
+    origin: "https://bookstore-frontend-svli.onrender.com",
     credentials: true,
   })
 );
