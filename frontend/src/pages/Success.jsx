@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../features/cartSlice.js";
 
