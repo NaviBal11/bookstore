@@ -41,23 +41,29 @@ const payment = async (req, res) => {
       items.reduce((acc, item) => acc + item.book.price * item.quantity, 0) *
       1.1; // 10% tax included
 
-    // Save order details to MongoDB
-    const order = new Order({
-      userId,
+    // Prepare order data
+    const orderData = {
       items: items.map((item) => ({
         bookId: item.book._id, // Ensure bookId is provided
         quantity: item.quantity,
       })),
       totalAmount: Math.round(totalAmount * 100) / 100, // Ensure to save amount in the correct format
       status: "pending",
-    });
+    };
+
+    // Add userId if available
+    if (userId) {
+      orderData.userId = userId;
+
+      // Update user's orderHistory if userId is present
+      await User.findByIdAndUpdate(userId, {
+        $push: { orderHistory: orderData },
+      });
+    }
+
+    // Save order details to MongoDB
+    const order = new Order(orderData);
     await order.save();
-
-    // Update user's orderHistory
-    await User.findByIdAndUpdate(userId, {
-      $push: { orderHistory: order._id },
-    });
-
     res.json({ url: session.url });
   } catch (error) {
     console.error("Stripe session creation failed:", error);

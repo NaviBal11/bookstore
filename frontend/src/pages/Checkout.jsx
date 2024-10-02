@@ -5,21 +5,19 @@ import OrderSummary from "../components/OrderSummary";
 import { useSelector } from "react-redux";
 const URL = import.meta.env.VITE_BACKEND_URL;
 function Checkout() {
-  const [email, setEmail] = useState("");
-  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
   const cart = useSelector((state) => state.cart);
 
-  const generateRandomId = () => {
-    return Math.random().toString(36).substr(2, 9);
-  };
-
   const checkoutPaymentasGuest = async () => {
+    if (!guestEmail) {
+      alert("Please enter your email.");
+      return;
+    }
     try {
-      const id = generateRandomId();
       const response = await axios.post(`${URL}/payment`, {
         items: cart,
-        email,
-        id,
+        email: guestEmail,
+        userId: null,
       });
       if (response.data.url) {
         window.location.assign(response.data.url); // Forwarding user to Stripe
@@ -27,20 +25,6 @@ function Checkout() {
     } catch (error) {
       console.log(`Error: ${error}`);
     }
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleGuestCheckoutClick = () => {
-    setShowEmailForm(true);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const randomId = generateRandomId();
-    checkoutPaymentasGuest(randomId);
   };
 
   return (
@@ -63,40 +47,35 @@ function Checkout() {
             <h2 className="text-2xl font-semibold mb-6 text-center">
               Guest Checkout
             </h2>
-            {!showEmailForm ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                checkoutPaymentasGuest();
+              }}
+            >
+              <div className="mb-4">
+                <label
+                  htmlFor="guestEmail"
+                  className="block text-gray-700 font-semibold mb-2"
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="guestEmail"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
               <button
-                type="button"
+                type="submit"
                 className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-                onClick={handleGuestCheckoutClick}
               >
                 Continue as Guest
               </button>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-                >
-                  Submit
-                </button>
-              </form>
-            )}
+            </form>
           </div>
         </div>
         <div className="bg-white shadow-lg rounded-lg w-1/2 p-4">
