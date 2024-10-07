@@ -34,8 +34,8 @@ const payment = async (req, res) => {
         tax_rates: [taxRate.id],
       })),
       mode: "payment",
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cart",
+      success_url: "https://bookstore-frontend-qo9k.onrender.com/success",
+      cancel_url: "https://bookstore-frontend-qo9k.onrender.com/cart",
     });
 
     // Calculate total amount
