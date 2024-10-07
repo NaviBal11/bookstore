@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -13,6 +14,8 @@ function Register() {
   };
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     fullName: Yup.string().required("Full Name is Required"),
@@ -52,12 +55,23 @@ function Register() {
         withCredentials: true,
       });
       setFormData(initialFormData);
+      setSuccess("Registration successful! Redirecting to shop...");
+
+      // Redirect to shopping page after a delay
+      setTimeout(() => {
+        navigate("/books"); // Replace with your shopping page route
+      }, 2000); // Redirect after 2 seconds
     } catch (error) {
       const newErrors = {};
 
-      error.inner.forEach((err) => {
-        newErrors[err.path] = err.message;
-      });
+      if (error.inner) {
+        error.inner.forEach((err) => {
+          newErrors[err.path] = err.message;
+        });
+      } else {
+        newErrors.general =
+          error.response?.data?.message || "Registration failed";
+      }
 
       setErrors(newErrors);
     }
@@ -71,7 +85,16 @@ function Register() {
           className="bg-white p-8 rounded-lg shadow-md w-96 space-y-4"
         >
           <h2 className="text-2xl font-bold mb-4">Register</h2>
-
+          {success && (
+            <div className="bg-green-100 text-green-700 p-2 rounded">
+              {success}
+            </div>
+          )}
+          {errors.general && (
+            <div className="bg-red-100 text-red-700 p-2 rounded">
+              {errors.general}
+            </div>
+          )}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium">
               Full Name

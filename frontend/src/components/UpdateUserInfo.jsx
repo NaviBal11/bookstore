@@ -32,6 +32,11 @@ function UpdateUserInfo() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCancelChanges = () => {
+    setFormData({ fullName: "", username: "" });
+    setIsEditing(false);
+  };
+
   const handleSave = async () => {
     try {
       const response = await axios.patch(
@@ -50,9 +55,9 @@ function UpdateUserInfo() {
   };
 
   return (
-    <div className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-3xl font-bold text-center mb-8">Account Details</h2>
-      <div className="space-y-6">
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-center mb-6">Account Details</h2>
+      <div className="space-y-4">
         <div className="flex items-center">
           <span className="font-semibold text-gray-700 w-32">Name:</span>
           {isEditing ? (
@@ -87,12 +92,18 @@ function UpdateUserInfo() {
           )}
         </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-8 space-x-4">
           <button
             onClick={isEditing ? handleSave : handleEditClick}
             className="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md hover:bg-blue-600"
           >
             {isEditing ? "Update" : "Edit"}
+          </button>
+          <button
+            onClick={handleCancelChanges}
+            className="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md hover:bg-gray-600"
+          >
+            Cancel
           </button>
         </div>
       </div>

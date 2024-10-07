@@ -3,8 +3,10 @@ import { stripe_secret_key } from "../config.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import Stripe from "stripe";
+import mongoose from "mongoose";
 
 const stripe = new Stripe(stripe_secret_key);
+
 const payment = async (req, res) => {
   const { items, email, userId } = req.body;
 
@@ -32,8 +34,8 @@ const payment = async (req, res) => {
         tax_rates: [taxRate.id],
       })),
       mode: "payment",
-      success_url: "https://bookstore-frontend-elhr.onrender.com/success", // Replace with your success URL
-      cancel_url: "https://bookstore-frontend-elhr.onrender.com/cart", // Replace with your cancel URL
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/cart",
     });
 
     // Calculate total amount
@@ -44,26 +46,23 @@ const payment = async (req, res) => {
     // Prepare order data
     const orderData = {
       items: items.map((item) => ({
-        bookId: item.book._id, // Ensure bookId is provided
+        bookId: new mongoose.Types.ObjectId(item.book._id), // Ensure bookId is provided
         quantity: item.quantity,
       })),
       totalAmount: Math.round(totalAmount * 100) / 100, // Ensure to save amount in the correct format
       status: "pending",
     };
-
-    // Add userId if available
-    if (userId) {
-      orderData.userId = userId;
-
-      // Update user's orderHistory if userId is present
-      await User.findByIdAndUpdate(userId, {
-        $push: { orderHistory: orderData },
-      });
-    }
-
     // Save order details to MongoDB
     const order = new Order(orderData);
     await order.save();
+
+    // Add userId if available and update user's orderHistory
+    if (userId) {
+      await User.findByIdAndUpdate(userId, {
+        $push: { orderHistory: order._id }, // Push the order ID to the user's order history
+      });
+    }
+
     res.json({ url: session.url });
   } catch (error) {
     console.error("Stripe session creation failed:", error);

@@ -11,16 +11,17 @@ function AccountDetails() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
-      <div>
-        <UpdateUserInfo />
-        <div>
-          <ChangePassword />
+    <div className="min-h-screen bg-gray-100 py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <UpdateUserInfo />
+            <ChangePassword />
+          </div>
+          <div className="space-y-6">
+            <OrderHistory />
+          </div>
         </div>
-      </div>
-
-      <div>
-        <OrderHistory />
       </div>
     </div>
   );
